@@ -38,7 +38,7 @@ var conversation = new Conversation({
 
 // Endpoint to be call from the client side
 app.post('/api/message', function(req, res) {
-  var workspace = process.env.WORKSPACE_ID || 'e08301fc-63e2-4cc7-9803-0b65a0319b0e';
+  var workspace = process.env.WORKSPACE_ID || 'b160f56f-7204-4beb-8ba0-276f7e65bb9b'; //b160f56f-7204-4beb-8ba0-276f7e65bb9b //e08301fc-63e2-4cc7-9803-0b65a0319b0e car dashboard
   if (!workspace || workspace === '<workspace-id>') {
     return res.json({
       'output': {
