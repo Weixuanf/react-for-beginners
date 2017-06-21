@@ -1,6 +1,6 @@
 # react-for-beginners
 To run the app:
 
-    ```bash
+    bash
     npm run dev
-    ```
+    
