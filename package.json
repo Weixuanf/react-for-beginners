@@ -33,8 +33,10 @@
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-simple-chatbot": "^0.1.10",
+    "streamifier": "^0.1.1",
     "watson-developer-cloud": "^2.31.1",
-    "webpack": "^1.12.13"
+    "webpack": "^1.12.13",
+    "ws": "^3.0.0"
   },
   "devDependencies": {
     "concurrently": "^1.0.0"

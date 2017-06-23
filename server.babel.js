@@ -8,7 +8,7 @@
 //console.log('listening at 3000');
 
 var server = require('./src/app');
-var port = 3001;
+var port = 3000;
 
 server.listen(port, function() {
   // eslint-disable-next-line

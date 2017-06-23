@@ -230,4 +230,5 @@ var ConversationPanel = (function() {
     }
   }
 }());
+
 module.exports = ConversationPanel;
