@@ -11,7 +11,7 @@ class CollapsePanel extends Component {
 
 
   static defaultProps = {
-    isOpened: false
+    isOpened: true
   };
 
 
@@ -24,26 +24,26 @@ class CollapsePanel extends Component {
 	const hideStyle = {
 			  display: 'none',
 	};
-	const CollapsePanelStyle = {
-	  display: '-webkit-flex',
-      display: 'flex',
-      'flex-direction': 'row',
-      height: '100%',
-      justifyContent: 'flex-end'
-	}
-	const chatMiniStyle = {
-	  width: '5%',
-	  background: '#351C75',
-	  color: '#FFFFFF',
-	  padding: '50px 5px',
-	  'font-size': '18px',
-	  textAlign: 'center'
-	};
+	// const CollapsePanelStyle = {
+	//   display: '-webkit-flex',
+  //     display: 'flex',
+  //     'flex-direction': 'row',
+  //     height: '100%',
+  //     justifyContent: 'flex-end'
+	// }
+	// const chatMiniStyle = {
+	//   width: '5%',
+	//   background: '#351C75',
+	//   color: '#FFFFFF',
+	//   padding: '50px 5px',
+	//   'font-size': '18px',
+	//   textAlign: 'center'
+	// };
 
     return (
-      <div className="CollapsePanel" style={CollapsePanelStyle}>
-       
-		<label style={chatMiniStyle}>
+      <div className="CollapsePanel" >
+
+		<label className="chatMini">
 		  Chat
 		  <input className="input"
 		      type="checkbox"
@@ -53,7 +53,7 @@ class CollapsePanel extends Component {
 		<div style={this.state.isOpened ? {}:hideStyle}>
 	      <Chatapp> </Chatapp>
 		</div>
-		
+
       </div>
     );
   }

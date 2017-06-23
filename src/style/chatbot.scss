@@ -1,0 +1,39 @@
+body {
+  background-color: #333;
+}
+// MicButton
+.outCircle {
+  background-color: #4DCABC;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+}
+// chatbot panel
+#payload-column {
+  display: none;
+}
+#textInput {
+  display: none;
+}
+.inputOutline {
+  display: none;
+}
+.chatMini {
+  // background-color: #292C33;
+  width: 50px;
+  background: rgb(53, 28, 117);
+  color: rgb(255, 255, 255);
+  padding: 50px 5px;
+  font-size: 18px;
+  text-align: center;
+}
+.CollapsePanel {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  height: 70%;
+  justify-content: flex-end;
+  position: fixed;
+  right: 0;
+  z-index: 900;
+}

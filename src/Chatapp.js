@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
+import MicButton from './MicButton';
+import './style/app.css'
+import './style/chatbot.scss'
 
 class Chatapp extends Component {
 	constructor(props) {
@@ -36,10 +38,14 @@ class Chatapp extends Component {
 
 		require('./js/global');
 
-    const css = document.createElement("link");
-    css.rel = "stylesheet"
-    css.href = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/app.css";
-    document.head.appendChild(css);
+    // const css = document.createElement("link");
+    // css.rel = "stylesheet"
+    // css.href = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/app.css";
+    // document.head.appendChild(css);
+
+		const fontawesome = document.createElement("script");
+		fontawesome.src = "https://use.fontawesome.com/776012486e.js";
+		document.head.appendChild(fontawesome);
 
 		this.connectWebsocket();
     }
@@ -143,6 +149,7 @@ class Chatapp extends Component {
 	            <input id="textInput" className="input responsive-column"
 	              placeholder="Type something" type="text"/>
 	          </label>
+						<MicButton/>
 	        </div>
 	      </div>
 	      <div id="payload-column" className="fixed-column content-column">
