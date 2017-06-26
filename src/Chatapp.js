@@ -46,12 +46,43 @@ class Chatapp extends Component {
     // css.href = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/app.css";
     // document.head.appendChild(css);
 
-
-
 		this.connectWebsocket();
     }
 	sendMessage() {//send speech text to chatbot
 		document.getElementById('textInput').value = "hi";//set text area value to speech text
+	}
+	connectTextToSpeech() {
+		var voice = 'en-US_AllisonVoice';
+		var token = {authentication-token};
+		var wsURI = 'wss://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=' +
+		  voice + '&watson-token=' + token;
+		var websocket = new WebSocket(wsURI);
+		websocket.onopen = function(evt) { onOpen(evt) };
+		websocket.onclose = function(evt) { onClose(evt) };
+		websocket.onmessage = function(evt) { onMessage(evt) };
+		websocket.onerror = function(evt) { onError(evt) };
+		function onOpen(evt) {
+		  var message = {
+		    text: 'Hello world',
+		    accept: '*/*'
+		  };
+		  websocket.send(JSON.stringify(message));
+		}
+		var messages;
+		var audioStream;
+
+		function onMessage(evt) {
+		  if (typeof evt.data === string) {
+		    messages += evt.data;
+		  } else {
+		    console.log('Received ' + evt.data.size() + ' binary bytes');
+		    audioStream += evt.data;
+		  }
+		}
+
+		function onClose(evt) {
+		  // The audio stream is complete.
+		}
 	}
 	connectWebsocket() {
 		// var http = new XMLHttpRequest();
