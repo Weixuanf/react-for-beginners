@@ -8,7 +8,11 @@ class Chatapp extends Component {
 	constructor(props) {
         super(props);
     }
-
+	componentWillMount() {
+		const fontawesome = document.createElement("script");
+		fontawesome.src = "https://use.fontawesome.com/776012486e.js";
+		document.head.appendChild(fontawesome);
+	}
 	componentDidMount() {
 		//importing .js scripts of conversation-simple (message interface)
 		// const common = document.createElement("script");
@@ -37,15 +41,12 @@ class Chatapp extends Component {
     // document.body.appendChild(global);
 
 		require('./js/global');
-
     // const css = document.createElement("link");
     // css.rel = "stylesheet"
     // css.href = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/app.css";
     // document.head.appendChild(css);
 
-		const fontawesome = document.createElement("script");
-		fontawesome.src = "https://use.fontawesome.com/776012486e.js";
-		document.head.appendChild(fontawesome);
+
 
 		this.connectWebsocket();
     }
