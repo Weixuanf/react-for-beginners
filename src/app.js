@@ -27,6 +27,36 @@ var app = express();
 app.use(express.static('./public')); // load UI from public folder
 app.use(bodyParser.json());
 
+var watson = require('watson-developer-cloud');
+var vcapServices = require('vcap_services');
+var extend = (extend = require('util')._extend);
+
+// another endpoint for the text to speech service
+
+// For local development, replace username and password or set env properties
+var ttsConfig = extend(
+  {
+    version: 'v1',
+    url: 'https://stream.watsonplatform.net/text-to-speech/api',
+    username: process.env.TTS_USERNAME || '2253de09-42f8-4b50-9ac2-42cc205f7ec1',
+    password: process.env.TTS_PASSWORD || 'ha5vusqf43Tj'
+  },
+  vcapServices.getCredentials('text_to_speech')
+);
+
+var ttsAuthService = watson.authorization(ttsConfig);
+
+app.get('/token', function(req, res) {
+  ttsAuthService.getToken({ url: ttsConfig.url }, function(err, token) {
+    if (err) {
+      console.log('Error retrieving token: ', err);
+      res.status(500).send('Error retrieving token');
+      return;
+    }
+    res.send(token);
+  });
+});
+
 // Create the service wrapper
 var conversation = new Conversation({
   // If unspecified here, the CONVERSATION_USERNAME and CONVERSATION_PASSWORD env properties will be checked

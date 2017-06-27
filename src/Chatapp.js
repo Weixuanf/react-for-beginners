@@ -47,42 +47,77 @@ class Chatapp extends Component {
     // document.head.appendChild(css);
 
 		this.connectWebsocket();
+		this.connectTextToSpeech();
     }
-	sendMessage() {//send speech text to chatbot
-		document.getElementById('textInput').value = "hi";//set text area value to speech text
+
+	connectTtsWs(token) {
+		var voice = 'en-US_AllisonVoice';
+		var format = 'audio/ogg;codecs=opus';
+		console.log(token);
+		var wsURI = 'wss://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=' +
+			voice + '&watson-token=' + token;
+		var websocket = new WebSocket(wsURI);
+		var audioParts = [];
+		var finalAudio;
+
+		websocket.onopen = function (evt) {
+			var message = {
+				text: 'Hello world',
+				accept: '*/*'
+			};
+			websocket.send(JSON.stringify(message));
+		};
+		websocket.onclose = function(evt) {
+			console.log('WebSocket closed', evt.code, evt.reason);
+			finalAudio = new Blob(audioParts, {type: format});
+			console.log('final audio: ', finalAudio);
+			var blobUrl = (URL.createObjectURL(finalAudio));
+			var voice = new Audio(blobUrl); //create HTMLAudioElement
+			voice.play();
+		};
+		websocket.onmessage = function (evt) {
+			if (typeof evt.data === 'string') {
+				console.log('Received string message: ', evt.data)
+			} else {
+				console.log('Received ' + evt.data.size + ' binary bytes', evt.data.type);
+				audioParts.push(evt.data);
+			}
+		};
+		// websocket.onerror = function(evt) { onError(evt) };
 	}
 	connectTextToSpeech() {
-		var voice = 'en-US_AllisonVoice';
-		var token = {authentication-token};
-		var wsURI = 'wss://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=' +
-		  voice + '&watson-token=' + token;
-		var websocket = new WebSocket(wsURI);
-		websocket.onopen = function(evt) { onOpen(evt) };
-		websocket.onclose = function(evt) { onClose(evt) };
-		websocket.onmessage = function(evt) { onMessage(evt) };
-		websocket.onerror = function(evt) { onError(evt) };
-		function onOpen(evt) {
-		  var message = {
-		    text: 'Hello world',
-		    accept: '*/*'
-		  };
-		  websocket.send(JSON.stringify(message));
-		}
-		var messages;
-		var audioStream;
+		// var url = "https://stream.watsonplatform.net/authorization/api/v1/token?url=https://stream.watsonplatform.net/text-to-speech/api"
+		// //url = "https://www.html5rocks.com/en/tutorials/cors/";
+		// // var xhr = this.createCORSRequest('GET', url);
+		// if (!xhr) {
+		//   throw new Error('CORS not supported');
+		// }
+		// var username = '2253de09-42f8-4b50-9ac2-42cc205f7ec1';
+		// var password = 'ha5vusqf43Tj';
+		// xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+		// // Response handlers.
+		// xhr.onload = function() {
+		// 	var text = xhr.responseText;
+		// 	// var title = getTitle(text);
+		// 	alert('Response from CORS request to ' + url + ': ' + title);
+		// };
+		//
+		// xhr.onerror = function() {
+		// 	alert('Woops, there was an error making the request.');
+		// };
+		//
+		// xhr.send();
+		var xmlHttp = new XMLHttpRequest();
+		var token = null;
+		xmlHttp.open( "GET", '/token', true ); // false for synchronous request
+		xmlHttp.send( null );
+		xmlHttp.onreadystatechange = () => {
+      if (xmlHttp.readyState === 4 && xmlHttp.status === 200 && xmlHttp.responseText) {
+        token = xmlHttp.responseText;
+				this.connectTtsWs(token);
+      }
+    };
 
-		function onMessage(evt) {
-		  if (typeof evt.data === string) {
-		    messages += evt.data;
-		  } else {
-		    console.log('Received ' + evt.data.size() + ' binary bytes');
-		    audioStream += evt.data;
-		  }
-		}
-
-		function onClose(evt) {
-		  // The audio stream is complete.
-		}
 	}
 	connectWebsocket() {
 		// var http = new XMLHttpRequest();
