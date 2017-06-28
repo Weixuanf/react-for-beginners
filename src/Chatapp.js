@@ -8,124 +8,20 @@ class Chatapp extends Component {
 	constructor(props) {
         super(props);
     }
-	componentWillMount() {
+	componentWillMount() { //add font-awsome lib
 		const fontawesome = document.createElement("script");
 		fontawesome.src = "https://use.fontawesome.com/776012486e.js";
 		document.head.appendChild(fontawesome);
 	}
 	componentDidMount() {
-		//importing .js scripts of conversation-simple (message interface)
-		// const common = document.createElement("script");
-    // common.src = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/common.js";
-    // common.async = false;
-    // document.body.appendChild(common);
-		//
-    // const api = document.createElement("script");
-    // api.src = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/api.js";
-    // api.async = false;
-    // document.body.appendChild(api);
-		//
-    // const conversation = document.createElement("script");
-    // conversation.src = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/conversation-new.js";
-    // conversation.async = false;
-    // document.body.appendChild(conversation);
-		//
-    // const payload = document.createElement("script");
-    // payload.src = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/payload.js";
-    // payload.async = false;
-    // document.body.appendChild(payload);
-		//
-    // const global = document.createElement("script");
-    // global.src = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/global.js";
-    // global.async = false;
-    // document.body.appendChild(global);
-
 		require('./js/global');
-    // const css = document.createElement("link");
-    // css.rel = "stylesheet"
-    // css.href = "https://s3.amazonaws.com/aws-website-myvqa-olx0m/watsonConversation/app.css";
-    // document.head.appendChild(css);
+		this.connectWebsocket(); //speech to text
+		// this.connectTextToSpeech();
+		var tts = require('./js/TextToSpeechWs');
+		tts.connectTextToSpeech('hello world');
+  }
 
-		this.connectWebsocket();
-		this.connectTextToSpeech();
-    }
-
-	connectTtsWs(token) {
-		var voice = 'en-US_AllisonVoice';
-		var format = 'audio/ogg;codecs=opus';
-		console.log(token);
-		var wsURI = 'wss://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?voice=' +
-			voice + '&watson-token=' + token;
-		var websocket = new WebSocket(wsURI);
-		var audioParts = [];
-		var finalAudio;
-
-		websocket.onopen = function (evt) {
-			var message = {
-				text: 'Hello world',
-				accept: '*/*'
-			};
-			websocket.send(JSON.stringify(message));
-		};
-		websocket.onclose = function(evt) {
-			console.log('WebSocket closed', evt.code, evt.reason);
-			finalAudio = new Blob(audioParts, {type: format});
-			console.log('final audio: ', finalAudio);
-			var blobUrl = (URL.createObjectURL(finalAudio));
-			var voice = new Audio(blobUrl); //create HTMLAudioElement
-			voice.play();
-		};
-		websocket.onmessage = function (evt) {
-			if (typeof evt.data === 'string') {
-				console.log('Received string message: ', evt.data)
-			} else {
-				console.log('Received ' + evt.data.size + ' binary bytes', evt.data.type);
-				audioParts.push(evt.data);
-			}
-		};
-		// websocket.onerror = function(evt) { onError(evt) };
-	}
-	connectTextToSpeech() {
-		// var url = "https://stream.watsonplatform.net/authorization/api/v1/token?url=https://stream.watsonplatform.net/text-to-speech/api"
-		// //url = "https://www.html5rocks.com/en/tutorials/cors/";
-		// // var xhr = this.createCORSRequest('GET', url);
-		// if (!xhr) {
-		//   throw new Error('CORS not supported');
-		// }
-		// var username = '2253de09-42f8-4b50-9ac2-42cc205f7ec1';
-		// var password = 'ha5vusqf43Tj';
-		// xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
-		// // Response handlers.
-		// xhr.onload = function() {
-		// 	var text = xhr.responseText;
-		// 	// var title = getTitle(text);
-		// 	alert('Response from CORS request to ' + url + ': ' + title);
-		// };
-		//
-		// xhr.onerror = function() {
-		// 	alert('Woops, there was an error making the request.');
-		// };
-		//
-		// xhr.send();
-		var xmlHttp = new XMLHttpRequest();
-		var token = null;
-		xmlHttp.open( "GET", '/token', true ); // false for synchronous request
-		xmlHttp.send( null );
-		xmlHttp.onreadystatechange = () => {
-      if (xmlHttp.readyState === 4 && xmlHttp.status === 200 && xmlHttp.responseText) {
-        token = xmlHttp.responseText;
-				this.connectTtsWs(token);
-      }
-    };
-
-	}
 	connectWebsocket() {
-		// var http = new XMLHttpRequest();
-    // http.open('POST', '/audio', true);
-		// http.setRequestHeader('Content-type', 'application/json');
-		// var params = JSON.stringify({hello:'hello world'});
-		// http.send(params);
-
 		// Create WebSocket connection.
 		const socket = new WebSocket('ws://localhost:3001');
 		// Listen for messages
